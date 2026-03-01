@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+</head>
+<body>
+
+<div class="search-box">
+    <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    <input placeholder="Search">
+</div>
+
+<div class="data">
+    <table>
+        <thead>
+            <tr>
+                <th>Student</th>
+                <th>Partner</th>
+                <th>From</th>
+                <th>To</th>
+                <th>Time Left</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+</div>
+
+<div class="active">
+    <h2>Currently Out</h2>
+    <div class="active-user">
+        <p><strong>Test, Test</strong> → Bathroom</p>
+        <p>Left: 12:00:00</p>
+    </div>
+</div>
+
+<script src="{{ url_for('static', filename='js/update.js') }}"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", loadPasses);
+    setInterval(loadPasses, 10000);
+
+    document.querySelector(".search-box input").addEventListener("input", function() {
+        const query = this.value.toLowerCase();
+        const rows = document.querySelectorAll("table tbody tr");
+        rows.forEach(row => {
+            const text = row.textContent.toLowerCase();
+            row.style.display = text.includes(query) ? "" : "none";
+        });
+    });
+</script>
+</body>
+</html>

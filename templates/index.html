@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EComp-pass</title>
+    <!-- css -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <!-- main container -->
+    <div class="center-container">
+        <div class="form">
+            <h1>EComp-pass</h1>
+
+            <!-- form div for inputs -->
+            <form>
+                <!-- student id input -->
+                <div>
+                    <label for="student-id">Student ID</label>
+                    <input type="text" inputmode="numeric" maxlength="6" pattern="[0-9]*" id="student-id" name="student_id">
+                </div>
+
+                <!-- partner id input -->
+                <div>
+                    <label for="partner-id">Partner ID</label>
+                    <input type="text" inputmode="numeric" maxlength="6" pattern="[0-9]*" id="partner-id" name="partner_id">
+                </div>
+
+                <!-- current location dropdown -->
+                <div>
+                    <label for="where-am-i-at">Where am I at?</label>
+                    <select id="where-am-i-at" name="where_am_i_at">
+                        <option value="">-- Select --</option>
+                        <option value="field">Field</option>
+                        <option value="pit">Pit</option>
+                        <option value="bathroom">Bathroom</option>
+                    </select>
+                </div>
+
+                <!-- destination dropdown -->
+                <div>
+                    <label for="where-am-i-going">Where am I going?</label>
+                    <select id="where-am-i-going" name="where_am_i_going">
+                        <option value="">-- Select --</option>
+                        <option value="field">Field</option>
+                        <option value="pit">Pit</option>
+                        <option value="bathroom">Bathroom</option>
+                    </select>
+                </div>
+
+                <!-- submit button -->
+                <button type="submit">Submit</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- save and load script. -->
+    <script src="{{ url_for('static', filename='js/index.js') }}"></script>
+</body>
+</html>

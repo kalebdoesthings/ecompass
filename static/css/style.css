@@ -1,0 +1,303 @@
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: rgb(238, 238, 238);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.form {
+  width: 30vw;
+  height: 70vh;
+  background-color: white;
+  border-radius: 0.5vw;
+  display: flex;
+  flex-direction: column;
+  margin-top: 1vw;
+  align-items: center;
+  padding: 3vw;
+  gap: 0.5vw;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 10px 20px rgba(0, 0, 0, 0.15);
+  transition: box-shadow 0.3s ease;
+}
+
+.form:hover {
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+}
+
+@media (max-width: 768px) {
+  .form {
+    width: 80vw;
+    height: 90vh;
+    padding: 5vw;
+  }
+}
+
+.form form {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.form label {
+  text-align: left;
+  width: 100%;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 0.5rem;
+}
+
+.form input,
+.form select {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 1.5rem;
+  font-size: 1.2rem;
+  border: 2px solid #ddd;
+  border-radius: 0.4vw;
+  font-family: inherit;
+  transition: border-color 0.3s ease;
+  margin-bottom: 2vh;
+}
+
+.form select:hover,
+.form input:hover {
+  border: 2px solid rgb(29, 125, 241, 0.5);
+}
+
+.form select:focus,
+.form input:focus {
+  border: 2px solid rgb(29, 125, 241);
+  outline: none;
+}
+
+.form button {
+  width: 40%;
+  padding: 0.8rem 1.5rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  background-color: rgb(29, 125, 241);
+  color: white;
+  transition: background-color 0.3s ease;
+  align-self: center;
+  margin-top: 1vh;
+}
+
+.form button:hover {
+  background-color: rgb(20, 100, 200);
+}
+
+.form button:active {
+  background-color: rgb(15, 80, 170);
+}
+
+@media (prefers-color-scheme: light) {
+  body {
+    background-color: rgb(238, 238, 238);
+  }
+  .form {
+    background-color: white;
+  }
+  .form label {
+    color: #333;
+  }
+  .form input,
+  .form select {
+    background-color: white;
+    color: #333;
+    border-color: #ddd;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  body {
+    background-color: #1a1a1a;
+  }
+  .form {
+    background-color: #2a2a2a;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3), 0 10px 20px rgba(0, 0, 0, 0.4);
+  }
+  .form:hover {
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+  }
+  .form h1 {
+    color: #eee;
+  }
+  .form label {
+    color: #ccc;
+  }
+  .form input,
+  .form select {
+    background-color: #333;
+    color: #eee;
+    border-color: #555;
+  }
+  .form select option {
+    background-color: #333;
+    color: #eee;
+  }
+  .form button {
+    background-color: rgb(40, 130, 240);
+  }
+  .form button:hover {
+    background-color: rgb(55, 145, 255);
+  }
+  .form button:active {
+    background-color: rgb(25, 110, 220);
+  }
+}
+
+
+
+
+
+
+/* Notification animations */
+@keyframes notifBar {
+  from { transform: scaleX(1); }
+  to   { transform: scaleX(0); }
+}
+
+/* Notification box */
+.notification {
+  transition: opacity 0.4s linear;
+  width: 280px;
+  position: fixed;
+  z-index: 9999;
+  top: 2vh;
+  left: 50%;
+  transform: translateX(-50%);
+  border-radius: 8px;
+  background: linear-gradient(
+    135deg,
+    rgba(255,255,255,0.05),
+    rgba(20,20,30,0.6)
+  );
+  overflow: hidden;
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border: 1px solid rgba(255,255,255,0.15);
+  padding: 12px 16px 12px 40px;
+  box-shadow:
+    0 12px 40px rgba(0,0,0,0.6),
+    0 0 30px rgba(255,255,255,0.05);
+}
+
+.notification.fadeOut {
+  opacity: 0;
+}
+
+.notification h1,
+.notification h2 {
+  margin: 0;
+  padding: 0;
+  line-height: 1.3;
+}
+
+.notification h2 {
+  font-size: 0.8rem;
+  opacity: 0.6;
+  color: white;
+  margin-top: 2px;
+}
+
+.notification.success h1 {
+  font-size: 1rem;
+  color: rgb(4, 255, 0);
+}
+
+.notification.failed h1 {
+  font-size: 1rem;
+  color: rgb(240, 15, 15);
+}
+
+.notification svg {
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 20px;
+  height: 20px;
+}
+
+.notification.success svg {
+  fill: #00ff66;
+}
+
+.notification.failed svg {
+  fill: #f00f0f;
+}
+
+.notification.success {
+  box-shadow:
+    0 18px 60px rgba(0,0,0,0.55),
+    0 0 28px rgba(0, 255, 140, 0.18);
+}
+
+.notification.failed {
+  box-shadow:
+    0 18px 60px rgba(0,0,0,0.55),
+    0 0 28px rgba(240, 15, 15, 0.50);
+}
+
+.notification.success::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 3px;
+  width: 100%;
+  background: rgb(4, 255, 0);
+  transform-origin: left;
+  animation: notifBar 3s linear reverse;
+}
+
+.notification.failed::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 3px;
+  width: 100%;
+  background: rgb(240, 15, 15);
+  transform-origin: left;
+  animation: notifBar 3s linear reverse;
+}
+
+@media (max-width: 768px) {
+  .notification {
+    width: 75vw;
+    padding: 10px 14px 10px 38px;
+  }
+  .notification svg {
+    left: 8px;
+    width: 18px;
+    height: 18px;
+  }
+  .notification.success h1,
+  .notification.failed h1 {
+    font-size: 0.9rem;
+  }
+  .notification h2 {
+    font-size: 0.75rem;
+  }
+}
