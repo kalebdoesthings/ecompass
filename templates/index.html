@@ -5,11 +5,40 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>EComp-pass</title>
     <!-- css -->
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}?v=2">
+
 </head>
 <body>
     <!-- main container -->
     <div class="center-container">
+        
+        
+        <div class="activePass">
+            <h1>Active Pass</h1>
+            
+            <div class="pass-divider"></div>
+            
+            <h2 class="peopleOnPass"></h2>
+            
+            <div class="pass-route">
+                <span class="route-from"></span>
+                <span class="route-arrow">→</span>
+                <span class="route-to"></span>
+            </div>
+            
+            <div class="pass-divider"></div>
+            
+            <p class="time-label">Time Gone</p>
+            
+            <h2 class="timeGone"></h2>
+            
+            <div class="pass-buttons">
+                <button onclick="changePassStatus('Arrived')" class="btn-arrived">Arrived</button>
+                <button onclick="changePassStatus('Cancelled')" class="btn-cancel">Cancel</button>
+            </div>
+        </div>
+        
+        
         <div class="form">
             <h1>EComp-pass</h1>
 
@@ -33,7 +62,7 @@
                     <select id="where-am-i-at" name="where_am_i_at">
                         <option value="">-- Select --</option>
                         <option value="field">Field</option>
-                        <option value="pit">Pit</option>
+                         <option value="pit">Pit</option>
                         <option value="bathroom">Bathroom</option>
                         <option value="Other">Other</option>
                     </select>

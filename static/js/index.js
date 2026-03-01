@@ -1,5 +1,179 @@
 // Load saved data when page loads
 
+function capitalizeFirstLetter(string) {
+  if (!string) {
+    return ""; // Handles empty or null strings
+  }
+  return string.charAt(0).toUpperCase() + string.slice(1);
+}
+
+
+
+
+
+function changePassStatus(type) {
+
+ if (!window.confirm("Are you sure you want to submit this pass?")) {
+    return;
+}
+
+
+  const studentId = localStorage.getItem('student-id');
+
+
+
+
+
+fetch('/change_pass_status/', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+        student_id: studentId,
+        new_status: type
+    })
+})
+.then(res => res.json())
+.then(data => {
+    console.log(data);
+});
+
+
+localStorage.removeItem("passStatus", "Active")
+window.location.reload()
+
+}
+
+
+function goneTime(timeLeft) {
+
+
+
+            const goneTimeH2 = document.querySelector('.timeGone')
+            var timeLeft = timeLeft.slice(-8);
+
+            console.log(timeLeft)
+            
+            leftTime = timeLeft.split(':');
+            
+            
+            leftHours = leftTime[0]
+            leftMinutes = leftTime[1]
+            leftSeconds = leftTime[2]
+            
+            
+            function calculateGoneTime() {
+              
+            const now = new Date();
+            const nowHours = now.getHours();         
+            const nowMinutes = now.getMinutes();     
+            const nowSeconds = now.getSeconds();     
+
+            let goneSeconds = nowSeconds - leftSeconds;
+            let goneMinutes = nowMinutes - leftMinutes;
+            let goneHours = nowHours - leftHours;
+
+            if (goneSeconds < 0) {
+                goneSeconds += 60;
+                goneMinutes--;
+            }
+            if (goneMinutes < 0) {
+                goneMinutes += 60;
+                goneHours--;
+            }
+
+            timeGone = `${goneHours}:${goneMinutes}:${goneSeconds}`
+            goneTimeH2.textContent = timeGone
+
+
+            }
+            calculateGoneTime()
+            let intervalID = setInterval(calculateGoneTime, 1000);
+
+            
+
+
+
+
+
+
+
+}
+
+
+document.addEventListener("DOMContentLoaded", function() {
+
+if (localStorage.getItem("passStatus") == "Active") {
+
+
+document.querySelectorAll('.form').forEach(el => {
+    el.style.display = 'none';
+    const studentId = localStorage.getItem('student-id');
+fetch('/active_pass/' + studentId)
+    .then(res => res.json())
+    .then(data => {
+        if (data.status === "ok") {
+            
+
+            var timeLeft = data.pass[5]
+
+            goneTime(timeLeft)
+
+
+            console.log(data)
+            var locFrom = data.pass[3]
+            
+            var locTo = data.pass[4]
+            
+            var locFrom = capitalizeFirstLetter(locFrom);
+            
+            var locTo = capitalizeFirstLetter(locTo);
+
+
+            var mainName = data.pass[1]
+
+            var partnerName = data.pass[2]
+  
+            
+            
+
+
+
+
+            document.querySelector('.peopleOnPass').textContent = `${mainName} & ${partnerName}`;
+
+            document.querySelector('.route-from').textContent = locFrom;
+            document.querySelector('.route-to').textContent = locTo;
+
+        }
+    });
+
+   
+
+
+
+    
+});
+
+
+}
+
+else {
+document.querySelectorAll('.activePass').forEach(el => {
+    el.style.display = 'none';
+});
+}
+
+  
+
+});
+
+
+
+
+
+
+
+
 document.addEventListener("DOMContentLoaded", function() {
 document.getElementById("where-am-i-at").addEventListener("change", function() {
     document.getElementById("custom-from").style.display = this.value === "Other" ? "block" : "none";
@@ -14,10 +188,6 @@ document.getElementById("where-am-i-going").addEventListener("change", function(
 
 
 });
-
-
-
-
 
 
 window.addEventListener('load', function() {
@@ -50,7 +220,9 @@ document.querySelectorAll('input, select, textarea').forEach(field => {
 // Handle form submission
 document.querySelector('form').addEventListener('submit', function(e) {
   e.preventDefault();
-
+  if (!window.confirm("Are you sure you want to submit this pass?")) {
+    return;
+}
   const whereAmIAt = document.getElementById('where-am-i-at');
   const whereAmIGoing = document.getElementById('where-am-i-going');
 
@@ -77,7 +249,12 @@ document.querySelector('form').addEventListener('submit', function(e) {
  .then(res => res.json())
   .then((data) => {
     if (data.status === "error") {
+      if (data.message == "You already have an active pass") {
+        localStorage.setItem("passStatus", "Active")
+        
+      }
       return showNotification("Error", data.message, false);
+      
     }
     whereAmIAt.value = whereAmIGoing.value;
     whereAmIGoing.value = '';
@@ -112,7 +289,7 @@ function showNotification(result, subresult, success) {
   }
 
   notification.classList.add("notification", success ? "success" : "failed");
-  setTimeout(() => notification.classList.add("fadeOut"), 3000);
-  setTimeout(() => notification.remove(), 3400);
+  setTimeout(() => notification.classList.add("fadeOut"), 1300);
+  setTimeout(() => window.location.reload(), 1700);   
 }
 });

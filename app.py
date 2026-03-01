@@ -17,8 +17,37 @@ def admin():
     return render_template("admin.html")
 
 
+@app.route("/change_pass_status/", methods=["POST"])
+def change_pass_status():
+    
+    data = request.get_json()
+    student_id = data['student_id']
+    new_status = data['new_status']
+    
+    
+    conn = sqlite3.connect("passes.db")
+    cursor = conn.cursor()
+    cursor.execute("UPDATE passes SET status = ? WHERE student_id = ? AND status = 'Active'", (new_status, student_id))
+    conn.commit()
+    conn.close()
+    return jsonify({"status": "ok"})
 
 
+
+@app.route("/active_pass/<student_id>")
+def active_pass(student_id):
+    conn = sqlite3.connect("passes.db")
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM passes WHERE student_id = ? AND status = 'Active'", (student_id,))
+    row = cursor.fetchone()
+    conn.close()
+    parsedrow = []
+    if row:
+        row = list(row)
+        row[1] = STUDENTS.get(row[1], row[1])
+        row[2] = STUDENTS.get(row[2], row[2])
+        return jsonify({"status": "ok", "pass": row})
+    return jsonify({"status": "none"})
 
 @app.route("/fetchpasses")
 def fetchpasses():
@@ -33,7 +62,7 @@ def fetchpasses():
         row[1] = STUDENTS.get(row[1], row[1])
         row[2] = STUDENTS.get(row[2], row[2])
         parsedrow.append(row)
-        print(row[7])
+        
     return jsonify(parsedrow)
 
 #takes in data from user and makes sure everything is good
@@ -60,7 +89,7 @@ def submit():
     cursor.execute("SELECT id FROM passes WHERE student_id = ? AND status = 'Active'", (student_id,))
     if cursor.fetchone():
         conn.close()
-    return jsonify({"status": "error", "message": "You already have an active pass"}), 400
+        return jsonify({"status": "error", "message": "You already have an active pass"}), 400
     cursor.execute(
     "INSERT INTO passes (student_id, partner_id, from_location, to_location, time_left, status) VALUES (?, ?, ?, ?, ?, ?)",
     (student_id, partner_id, current_location, to_location, datetime.datetime.now().strftime("%d/%m/%Y-%H:%M:%S"), "Active")
