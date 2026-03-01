@@ -33,6 +33,7 @@ def fetchpasses():
         row[1] = STUDENTS.get(row[1], row[1])
         row[2] = STUDENTS.get(row[2], row[2])
         parsedrow.append(row)
+        print(row[7])
     return jsonify(parsedrow)
 
 #takes in data from user and makes sure everything is good
@@ -42,6 +43,9 @@ def submit():
 
     student_id = data['student_id']
     partner_id = data['partner_id']
+
+    
+
 
     if student_id not in STUDENTS:
         return jsonify({"status": "error", "message": "Student ID not found"}), 400
@@ -53,10 +57,14 @@ def submit():
 
     conn = sqlite3.connect("passes.db")
     cursor = conn.cursor()
+    cursor.execute("SELECT id FROM passes WHERE student_id = ? AND status = 'Active'", (student_id,))
+    if cursor.fetchone():
+        conn.close()
+    return jsonify({"status": "error", "message": "You already have an active pass"}), 400
     cursor.execute(
-        "INSERT INTO passes (student_id, partner_id, from_location, to_location, time_left) VALUES (?, ?, ?, ?, ?)",
-        (student_id, partner_id, current_location, to_location, datetime.datetime.now().strftime("%d/%m/%Y-%H:%M:%S"))
-    )
+    "INSERT INTO passes (student_id, partner_id, from_location, to_location, time_left, status) VALUES (?, ?, ?, ?, ?, ?)",
+    (student_id, partner_id, current_location, to_location, datetime.datetime.now().strftime("%d/%m/%Y-%H:%M:%S"), "Active")
+    )   
     conn.commit()
     conn.close()
     print("saved to db")

@@ -1,14 +1,43 @@
 // Load saved data when page loads
+
+document.addEventListener("DOMContentLoaded", function() {
+document.getElementById("where-am-i-at").addEventListener("change", function() {
+    document.getElementById("custom-from").style.display = this.value === "Other" ? "block" : "none";
+});
+
+document.getElementById("where-am-i-going").addEventListener("change", function() {
+    document.getElementById("custom-to").style.display = this.value === "Other" ? "block" : "none";
+});
+
+
+
+
+
+});
+
+
+
+
+
+
 window.addEventListener('load', function() {
-  document.querySelectorAll('input, select').forEach(field => {
+  document.querySelectorAll('input, select, textarea').forEach(field => {
     if (field.id && localStorage.getItem(field.id)) {
       field.value = localStorage.getItem(field.id);
     }
   });
+
+  // After restoring, show textareas if "Other" was saved
+  if (document.getElementById('where-am-i-at').value === 'Other') {
+      document.getElementById('custom-from').style.display = 'block';
+  }
+  if (document.getElementById('where-am-i-going').value === 'Other') {
+      document.getElementById('custom-to').style.display = 'block';
+  }
 });
 
 // Auto-save as user types
-document.querySelectorAll('input, select').forEach(field => {
+document.querySelectorAll('input, select, textarea').forEach(field => {
   field.addEventListener('input', function() {
     if (this.id) localStorage.setItem(this.id, this.value);
   });
@@ -56,6 +85,7 @@ document.querySelector('form').addEventListener('submit', function(e) {
       if (field.id) localStorage.setItem(field.id, field.value);
     });
     showNotification("Submitted", "Pass logged successfully", true);
+    localStorage.setItem("passStatus", "Active")
   })
 
 

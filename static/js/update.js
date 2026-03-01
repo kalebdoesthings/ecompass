@@ -15,6 +15,8 @@ fetch("/fetchpasses")
                 <td>${row[3]}</td>
                 <td>${row[4]}</td>
                 <td>${row[5]}</td>
+                <td>${row[7]}</td>
+
             `;
             tbody.appendChild(tr);
         });
