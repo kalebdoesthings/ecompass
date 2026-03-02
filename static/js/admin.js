@@ -6,7 +6,32 @@ function capitalizeFirstLetter(string) {
   return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
+// converts a raw time string into 12h format
+function parseTime(rawTime) {
+    var date = rawTime.split("-")[0];
+    var time = rawTime.slice(-8);
+    var hours = Number(time.split(':')[0]);
+    var minutes = time.split(':')[1];
+    var seconds = time.split(':')[2];
 
+    // figure out am/pm and convert hour
+    var ampm = "";
+    var displayHour = hours;
+
+    if (hours == 0) {
+        displayHour = 12;
+        ampm = "AM";
+    } else if (hours < 12) {
+        ampm = "AM";
+    } else if (hours == 12) {
+        ampm = "PM";
+    } else {
+        displayHour = hours - 12;
+        ampm = "PM";
+    }
+
+    return `${date} - ${displayHour}:${minutes}:${seconds} ${ampm}`;
+}
 
 
 
@@ -23,7 +48,10 @@ function capitalizeFirstLetter(string) {
 function loadPasses() {
 
 fetch("/fetchpasses")
-    .then(res => res.json())
+    .then(res => {
+        if (!res.ok) throw new Error('Server error');
+        return res.json();
+    })
     .then(data => {
         const tbody = document.querySelector("table tbody");
         tbody.innerHTML = "";
@@ -39,16 +67,18 @@ fetch("/fetchpasses")
             const toLoc = capitalizeFirstLetter(row[4])
 
             var timeArrived = row[6]
-            if (timeArrived == null) {
 
-                timeArrived = "N/A" 
+            if (timeArrived == null) {
+                timeArrived = "N/A"
+            } else {
+                timeArrived = parseTime(timeArrived)
             }
 
             var timeLeft = row[5]
+            var parsedTime = parseTime(timeLeft)
             
 
-
-            statusName = row[7]
+            let statusName = row[7]
             
 
 
@@ -69,48 +99,13 @@ fetch("/fetchpasses")
                 var statusTD = `<td>${statusName}</td>`
             }
 
-            // variable assignment for calculating time
-            var date = timeLeft.split("-")[0];
-            var timeLeft = timeLeft.slice(-8);
-            
-
-
-            var leftTime = timeLeft.split(':');
-            
-            
+            // pull out raw h/m/s for gone time calculation
+            var rawTime = timeLeft.slice(-8);
+            var leftTime = rawTime.split(':');
             var leftHours = parseInt(leftTime[0])
             var leftMinutes = parseInt(leftTime[1])
             var leftSeconds = parseInt(leftTime[2])
 
-            // keep original 24h value for gone time math
-            var leftHours24 = leftHours
-
-
-            // since it is in military time we see if it is after 12 to determine wheter we subtract and make it PM or we keep it as AM
-            if (leftHours > 12) {
-
-                var displayHours = leftHours - 12
-
-                var parsedTime = `${date} - ${displayHours}:${leftMinutes}:${leftSeconds} PM`
-
-
-
-            }
-
-            else if (leftHours == 12) {
-
-                var parsedTime = `${date} - ${leftHours}:${leftMinutes}:${leftSeconds} PM`
-
-            }
-
-            // sets time as AM
-            else {
-
-
-                var parsedTime = `${date} - ${leftHours}:${leftMinutes}:${leftSeconds} AM`
-
-
-            }
 
 
             //assigns data to append to table
@@ -137,7 +132,7 @@ fetch("/fetchpasses")
                 const now = new Date();
                 let goneSeconds = now.getSeconds() - leftSeconds;
                 let goneMinutes = now.getMinutes() - leftMinutes;
-                let goneHours = now.getHours() - leftHours24;
+                let goneHours = now.getHours() - leftHours;
                 if (goneSeconds < 0) { goneSeconds += 60; goneMinutes--; }
                 if (goneMinutes < 0) { goneMinutes += 60; goneHours--; }
 
@@ -162,6 +157,7 @@ fetch("/fetchpasses")
                 row.style.display = text.includes(query) ? "" : "none";
             });
         }
-    });
+    })
+    .catch(err => console.error("Failed to load passes:", err));
 
 }

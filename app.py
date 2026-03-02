@@ -13,6 +13,20 @@ sys.stdout.flush()
 app = Flask(__name__)
 
 
+#creates db if it does not exist
+def init_db():
+    conn = sqlite3.connect("passes.db", timeout=10)
+    conn.execute("""CREATE TABLE IF NOT EXISTS passes (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        student_id TEXT, partner_id TEXT,
+        from_location TEXT, to_location TEXT,
+        time_left TEXT, time_arrived TEXT, status TEXT
+    )""")
+    conn.commit()
+    conn.close()
+
+init_db()
+
 
 
 #shows homepage
@@ -33,6 +47,13 @@ def change_pass_status():
     student_id = data['student_id']
     new_status = data['new_status']
     
+    
+    if not data or 'student_id' not in data or 'new_status' not in data:
+        return jsonify({"status": "error", "message": "Missing fields"})
+
+    #makes sure status is valid
+    if new_status not in ("Arrived", "Cancelled"):
+        return jsonify({"status": "error", "message": "Invalid status"})
     #updates data in db
     conn = sqlite3.connect("passes.db", timeout=10)
     cursor = conn.cursor()
@@ -57,7 +78,6 @@ def active_pass(student_id):
     cursor.execute("SELECT * FROM passes WHERE student_id = ? AND status = 'Active'", (student_id,))
     row = cursor.fetchone()
     conn.close()
-    parsedrow = []
     #parses active pass and changes ids into names
     if row:
         row = list(row)
@@ -97,6 +117,8 @@ def submit():
 
     student_id = data['student_id']
     partner_id = data['partner_id']
+    if student_id == partner_id:
+        return jsonify({"status": "error", "message": "You can't be your own partner"})
 
     
 
@@ -105,6 +127,7 @@ def submit():
         return jsonify({"status": "error", "message": "Student ID not found"}), 400
     if partner_id not in STUDENTS:
         return jsonify({"status": "error", "message": "Partner ID not found"}), 400
+    
 
     current_location = data['where_am_i_at']
     to_location = data['where_am_i_going']
@@ -116,6 +139,11 @@ def submit():
     if cursor.fetchone():
         conn.close()
         return jsonify({"status": "error", "message": "You already have an active pass"}), 400
+    #checks if partner is under a pass too
+    cursor.execute("SELECT * FROM passes WHERE student_id = ? AND status = 'Active'", (partner_id,))
+    if cursor.fetchone():
+        return jsonify({"status": "error", "message": "Partner already has an active pass"})
+
     #submits pass with the data provided from frontend
     cursor.execute(
     "INSERT INTO passes (student_id, partner_id, from_location, to_location, time_left, status) VALUES (?, ?, ?, ?, ?, ?)",

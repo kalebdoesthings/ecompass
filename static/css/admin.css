@@ -73,6 +73,7 @@ input::placeholder {
 /* currently out sidebar on the right */
 .active {
     position: fixed;
+    overflow-y: auto;
     width: 20.5vw;
     border-radius: 0.4vw;
     top: 2vh;

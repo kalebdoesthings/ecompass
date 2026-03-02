@@ -6,7 +6,7 @@ body {
   align-items: center;
   min-height: 100vh;
   background-color: rgb(238, 238, 238);
-  overflow: hidden;
+  overflow-y: auto;
 }
 
 /* shared card style for form and active pass */
