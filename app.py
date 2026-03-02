@@ -1,7 +1,7 @@
 #import libraries
 from flask import Flask, render_template, request, jsonify
 import sqlite3
-
+import os
 import json
 with open("students.json") as f:
     STUDENTS = json.load(f)
