@@ -10,6 +10,13 @@ import sys
 sys.stdout.flush()
 
 
+#creates json file if it doesnt exist
+filename = "students.json"
+
+if not os.path.exists(filename):
+    with open(filename, "w") as f:
+        json.dump([], f, indent=4)
+
 app = Flask(__name__)
 
 
