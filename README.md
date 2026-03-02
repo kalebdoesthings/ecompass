@@ -32,13 +32,7 @@ cd ecompass
 pip install flask
 ```
 
-3. set up the database
-
-```
-sqlite3 passes.db "CREATE TABLE passes (id INTEGER PRIMARY KEY AUTOINCREMENT, student_id TEXT, partner_id TEXT, from_location TEXT, to_location TEXT, time_left TEXT, time_arrived TEXT, status TEXT);"
-```
-
-4. add your students to `students.json`
+3. add your students to `students.json`
 
 ```json
 {
@@ -47,7 +41,7 @@ sqlite3 passes.db "CREATE TABLE passes (id INTEGER PRIMARY KEY AUTOINCREMENT, st
 }
 ```
 
-5. run it
+4. run it
 
 ```
 python app.py
