@@ -33,16 +33,13 @@
 
 <div class="active">
     <h2>Currently Out</h2>
-    <div class="active-user">
-        <p><strong>Test, Test</strong> → Bathroom</p>
-        <p>Left: 12:00:00</p>
-    </div>
+    <div class="active-list"></div>
 </div>
 
 <script src="{{ url_for('static', filename='js/update.js') }}"></script>
 <script>
     document.addEventListener("DOMContentLoaded", loadPasses);
-    setInterval(loadPasses, 5000);
+    setInterval(loadPasses, 1000);
 
     document.querySelector(".search-box input").addEventListener("input", function() {
         const query = this.value.toLowerCase();

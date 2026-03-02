@@ -6,6 +6,65 @@ function capitalizeFirstLetter(string) {
   return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
+function goneTime(timeLeft) {
+
+
+
+            
+            var timeLeft = timeLeft.slice(-8);
+
+            console.log(timeLeft)
+            
+            var leftTime = timeLeft.split(':');
+            
+            
+            var leftHours = leftTime[0]
+            var leftMinutes = leftTime[1]
+            var leftSeconds = leftTime[2]
+            
+            
+            function calculateGoneTime() {
+              
+            const now = new Date();
+            const nowHours = now.getHours();         
+            const nowMinutes = now.getMinutes();     
+            const nowSeconds = now.getSeconds();     
+
+            let goneSeconds = nowSeconds - leftSeconds;
+            let goneMinutes = nowMinutes - leftMinutes;
+            let goneHours = nowHours - leftHours;
+
+            if (goneSeconds < 0) {
+                goneSeconds += 60;
+                goneMinutes--;
+            }
+            if (goneMinutes < 0) {
+                goneMinutes += 60;
+                goneHours--;
+            }
+
+            timeGone = `${goneHours}:${goneMinutes}:${goneSeconds}`
+            
+            
+            
+            
+
+            }
+            calculateGoneTime()
+            let intervalID = setInterval(calculateGoneTime, 1000);
+
+            
+
+
+
+
+
+
+
+}
+
+
+
 
 
 
@@ -20,9 +79,16 @@ fetch("/fetchpasses")
     .then(res => res.json())
     .then(data => {
         const tbody = document.querySelector("table tbody");
-        tbody.innerHTML = "";  // clear existing rows
+        tbody.innerHTML = "";
+
+        const activeList = document.querySelector(".active-list");
+        activeList.innerHTML = "";
 
         data.forEach(row => {
+            
+            
+            goneTime(row[5])
+            
             const tr = document.createElement("tr");
 
             const fromLoc = capitalizeFirstLetter(row[3])
@@ -100,6 +166,20 @@ fetch("/fetchpasses")
 
             `;
             tbody.appendChild(tr);
+            
+            if (statusName == "Active") {
+                const card = document.createElement("div");
+                card.className = "active-user";
+
+                
+
+                card.innerHTML = `
+                    <p><strong>${row[1]} & ${row[2]}</strong> → ${toLoc}</p>
+                    <p>Left: ${parsedTime}</p>
+                    <p>Gone: ${timeGone}</p>
+                `;
+                activeList.appendChild(card);
+            }
         });
     });
 

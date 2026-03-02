@@ -49,6 +49,8 @@ function goneTime(timeLeft) {
             const goneTimeH2 = document.querySelector('.timeGone')
             var timeLeft = timeLeft.slice(-8);
 
+
+            
             console.log(timeLeft)
             
             var leftTime = timeLeft.split(':');
@@ -80,8 +82,10 @@ function goneTime(timeLeft) {
             }
 
             timeGone = `${goneHours}:${goneMinutes}:${goneSeconds}`
+            
+            
             goneTimeH2.textContent = timeGone
-
+            
 
             }
             calculateGoneTime()
