@@ -35,11 +35,9 @@ fetch('/change_pass_status/', {
 .then(res => res.json())
 .then(data => {
     console.log(data);
+    localStorage.removeItem("passStatus");
+    window.location.reload();
 });
-
-
-localStorage.removeItem("passStatus", "Active")
-window.location.reload()
 
 }
 
@@ -53,12 +51,12 @@ function goneTime(timeLeft) {
 
             console.log(timeLeft)
             
-            leftTime = timeLeft.split(':');
+            var leftTime = timeLeft.split(':');
             
             
-            leftHours = leftTime[0]
-            leftMinutes = leftTime[1]
-            leftSeconds = leftTime[2]
+            var leftHours = leftTime[0]
+            var leftMinutes = leftTime[1]
+            var leftSeconds = leftTime[2]
             
             
             function calculateGoneTime() {

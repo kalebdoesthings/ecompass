@@ -1,3 +1,4 @@
+#import libraries
 from flask import Flask, render_template, request, jsonify
 import sqlite3
 import os
@@ -5,6 +6,8 @@ from util import STUDENTS
 import datetime
 import sys
 sys.stdout.flush()
+
+
 app = Flask(__name__)
 
 
@@ -25,9 +28,13 @@ def change_pass_status():
     new_status = data['new_status']
     
     
-    conn = sqlite3.connect("passes.db")
+    conn = sqlite3.connect("passes.db", timeout=10)
     cursor = conn.cursor()
     cursor.execute("UPDATE passes SET status = ? WHERE student_id = ? AND status = 'Active'", (new_status, student_id))
+    if new_status == "Arrived":
+            current_time = datetime.datetime.now().strftime("%d/%m/%Y-%H:%M:%S")
+            cursor.execute("UPDATE passes SET time_arrived = ? WHERE student_id = ? AND status = ?", (current_time, student_id, new_status))
+
     conn.commit()
     conn.close()
     return jsonify({"status": "ok"})
@@ -36,7 +43,7 @@ def change_pass_status():
 
 @app.route("/active_pass/<student_id>")
 def active_pass(student_id):
-    conn = sqlite3.connect("passes.db")
+    conn = sqlite3.connect("passes.db", timeout=10)
     cursor = conn.cursor()
     cursor.execute("SELECT * FROM passes WHERE student_id = ? AND status = 'Active'", (student_id,))
     row = cursor.fetchone()
@@ -51,7 +58,7 @@ def active_pass(student_id):
 
 @app.route("/fetchpasses")
 def fetchpasses():
-    conn = sqlite3.connect("passes.db")
+    conn = sqlite3.connect("passes.db", timeout=10)
     cursor = conn.cursor()
     cursor.execute("SELECT * FROM passes ORDER BY id DESC")
     rows = cursor.fetchall()
@@ -84,7 +91,7 @@ def submit():
     current_location = data['where_am_i_at']
     to_location = data['where_am_i_going']
 
-    conn = sqlite3.connect("passes.db")
+    conn = sqlite3.connect("passes.db", timeout=10)
     cursor = conn.cursor()
     cursor.execute("SELECT id FROM passes WHERE student_id = ? AND status = 'Active'", (student_id,))
     if cursor.fetchone():

@@ -22,6 +22,7 @@
                 <th>From</th>
                 <th>To</th>
                 <th>Time Left</th>
+                <th>Time Arrived</th>
                 <th>Status</th>
             </tr>
         </thead>
@@ -41,7 +42,7 @@
 <script src="{{ url_for('static', filename='js/update.js') }}"></script>
 <script>
     document.addEventListener("DOMContentLoaded", loadPasses);
-    setInterval(loadPasses, 10000);
+    setInterval(loadPasses, 5000);
 
     document.querySelector(".search-box input").addEventListener("input", function() {
         const query = this.value.toLowerCase();
