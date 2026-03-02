@@ -3,3 +3,5 @@ util.py
 passes.db
 *.exe
 .vscode
+vscode
+__pycache__

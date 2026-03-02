@@ -1,3 +1,4 @@
+/* center everything */
 body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   display: flex;
@@ -8,20 +9,7 @@ body {
   overflow: hidden;
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+/* shared card style for form and active pass */
 .form, .activePass {
   width: 30vw;
   min-height: 70vh;
@@ -37,6 +25,7 @@ body {
   transition: box-shadow 0.3s ease;
 }
 
+/* active pass overrides */
 .activePass {
   text-align: center;
   justify-content: flex-start;
@@ -54,18 +43,21 @@ body {
   font-size: clamp(1.4rem, 2.2vw, 2rem);
 }
 
+/* names on the pass */
 .activePass .peopleOnPass {
   font-weight: 600;
   font-size: clamp(1.2rem, 1.8vw, 1.7rem);
   opacity: 0.85;
 }
 
+/* thin line between sections */
 .pass-divider {
   width: 60%;
   height: 1px;
   background-color: rgba(150, 150, 150, 0.3);
 }
 
+/* from -> to route display */
 .pass-route {
   display: flex;
   align-items: center;
@@ -80,6 +72,7 @@ body {
   font-size: clamp(1.6rem, 2.4vw, 2.2rem);
 }
 
+/* small "time gone" label above the timer */
 .time-label {
   font-size: clamp(0.85rem, 1vw, 1rem);
   text-transform: uppercase;
@@ -88,12 +81,14 @@ body {
   margin: 0;
 }
 
+/* the actual timer number */
 .activePass .timeGone {
   font-size: clamp(2rem, 3vw, 2.8rem);
   font-weight: 700;
   font-variant-numeric: tabular-nums;
 }
 
+/* arrived + cancel buttons */
 .pass-buttons {
   display: flex;
   gap: 1vw;
@@ -111,6 +106,7 @@ body {
   font-family: inherit;
 }
 
+/* green arrived button */
 .btn-arrived {
   background-color: rgb(34, 197, 94);
   color: white;
@@ -129,6 +125,7 @@ body {
   box-shadow: 0 1px 4px rgba(34, 197, 94, 0.3);
 }
 
+/* red cancel button */
 .btn-cancel {
   background-color: rgb(239, 68, 68);
   color: white;
@@ -151,6 +148,7 @@ body {
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
 }
 
+/* css for mobile */
 @media (max-width: 768px) {
   .form, .activePass {
     width: 80vw;
@@ -159,6 +157,7 @@ body {
   }
 }
 
+/* form layout */
 .form form {
   display: flex;
   flex-direction: column;
@@ -174,6 +173,7 @@ body {
   margin-bottom: 0.5rem;
 }
 
+/* inputs and dropdowns */
 .form input,
 .form select {
   width: 100%;
@@ -198,6 +198,7 @@ body {
   outline: none;
 }
 
+/* submit button */
 .form button {
   width: 40%;
   padding: 0.8rem 1.5rem;
@@ -221,13 +222,14 @@ body {
   background-color: rgb(15, 80, 170);
 }
 
+/* light mode */
 @media (prefers-color-scheme: light) {
   body {
     background-color: rgb(238, 238, 238);
   }
   .form, .activePass {
     background-color: white;
-    
+
   }
  .form h2, .activePass h2 {
     color: #333;
@@ -261,15 +263,16 @@ body {
   }
 }
 
+/* dark mode */
 @media (prefers-color-scheme: dark) {
   body {
     background-color: #1a1a1a;
   }
-  
+
   .form, .activePass {
     background-color: #2a2a2a;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3), 0 10px 20px rgba(0, 0, 0, 0.4);
-    
+
   }
   .form:hover, .activePass:hover {
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
@@ -320,17 +323,13 @@ body {
 }
 
 
-
-
-
-
-/* Notification animations */
+/* notification bar animation */
 @keyframes notifBar {
   from { transform: scaleX(1); }
   to   { transform: scaleX(0); }
 }
 
-/* Notification box */
+/* notification popup */
 .notification {
   transition: opacity 0.4s linear;
   width: 280px;
@@ -373,6 +372,7 @@ body {
   margin-top: 2px;
 }
 
+/* green for success, red for fail */
 .notification.success h1 {
   font-size: 1rem;
   color: rgb(4, 255, 0);
@@ -383,6 +383,7 @@ body {
   color: rgb(240, 15, 15);
 }
 
+/* icon inside notif */
 .notification svg {
   position: absolute;
   left: 10px;
@@ -400,6 +401,7 @@ body {
   fill: #f00f0f;
 }
 
+/* glow around notif */
 .notification.success {
   box-shadow:
     0 18px 60px rgba(0,0,0,0.55),
@@ -412,6 +414,7 @@ body {
     0 0 28px rgba(240, 15, 15, 0.50);
 }
 
+/* progress bar at bottom of notif */
 .notification.success::after {
   content: "";
   position: absolute;
@@ -436,6 +439,7 @@ body {
   animation: notifBar 1.3s linear reverse;
 }
 
+/* notif mobile */
 @media (max-width: 768px) {
   .notification {
     width: 75vw;
@@ -455,13 +459,14 @@ body {
   }
 }
 
+/* form field wrappers */
 .form div {
     display: flex;
     flex-direction: column;
     align-items: center;
 }
 
-
+/* custom "other" textareas */
 #custom-from,
 #custom-to {
     width: 70%;

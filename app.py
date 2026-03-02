@@ -1,8 +1,10 @@
 #import libraries
 from flask import Flask, render_template, request, jsonify
 import sqlite3
-import os
-from util import STUDENTS
+
+import json
+with open("students.json") as f:
+    STUDENTS = json.load(f)
 import datetime
 import sys
 sys.stdout.flush()
@@ -11,23 +13,27 @@ sys.stdout.flush()
 app = Flask(__name__)
 
 
+
+
+#shows homepage
 @app.route("/")
 def main():
     return render_template("index.html")
 
+#shows admin portal
 @app.route("/admin")
 def admin():
     return render_template("admin.html")
 
-
+#Route to allow js to req pass status change
 @app.route("/change_pass_status/", methods=["POST"])
 def change_pass_status():
-    
+    #req data from frontend
     data = request.get_json()
     student_id = data['student_id']
     new_status = data['new_status']
     
-    
+    #updates data in db
     conn = sqlite3.connect("passes.db", timeout=10)
     cursor = conn.cursor()
     cursor.execute("UPDATE passes SET status = ? WHERE student_id = ? AND status = 'Active'", (new_status, student_id))
@@ -37,18 +43,22 @@ def change_pass_status():
 
     conn.commit()
     conn.close()
+    #returns status to frontend
     return jsonify({"status": "ok"})
 
 
 
+#allows fetching of active passes with student id
 @app.route("/active_pass/<student_id>")
 def active_pass(student_id):
+    #connects to db and searches for all active passes
     conn = sqlite3.connect("passes.db", timeout=10)
     cursor = conn.cursor()
     cursor.execute("SELECT * FROM passes WHERE student_id = ? AND status = 'Active'", (student_id,))
     row = cursor.fetchone()
     conn.close()
     parsedrow = []
+    #parses active pass and changes ids into names
     if row:
         row = list(row)
         row[1] = STUDENTS.get(row[1], row[1])
@@ -56,14 +66,21 @@ def active_pass(student_id):
         return jsonify({"status": "ok", "pass": row})
     return jsonify({"status": "none"})
 
+
+
+
+
+#fetches all passes
 @app.route("/fetchpasses")
 def fetchpasses():
+    #connects to db and searches for all passes
     conn = sqlite3.connect("passes.db", timeout=10)
     cursor = conn.cursor()
     cursor.execute("SELECT * FROM passes ORDER BY id DESC")
     rows = cursor.fetchall()
     conn.close()
     parsedrow = []
+    #parses active pass and changes ids into names
     for row in rows:
         row = list(row)
         row[1] = STUDENTS.get(row[1], row[1])
@@ -75,6 +92,7 @@ def fetchpasses():
 #takes in data from user and makes sure everything is good
 @app.route("/submit", methods=["POST"])
 def submit():
+    #receives data from frontend
     data = request.get_json()
 
     student_id = data['student_id']
@@ -82,7 +100,7 @@ def submit():
 
     
 
-
+    #error handling
     if student_id not in STUDENTS:
         return jsonify({"status": "error", "message": "Student ID not found"}), 400
     if partner_id not in STUDENTS:
@@ -90,20 +108,22 @@ def submit():
 
     current_location = data['where_am_i_at']
     to_location = data['where_am_i_going']
-
+    #connects to db and checks if ids are already registered under a pass and if they arent it submits a pass
     conn = sqlite3.connect("passes.db", timeout=10)
     cursor = conn.cursor()
+    #check to see if id is registered under a pass
     cursor.execute("SELECT id FROM passes WHERE student_id = ? AND status = 'Active'", (student_id,))
     if cursor.fetchone():
         conn.close()
         return jsonify({"status": "error", "message": "You already have an active pass"}), 400
+    #submits pass with the data provided from frontend
     cursor.execute(
     "INSERT INTO passes (student_id, partner_id, from_location, to_location, time_left, status) VALUES (?, ?, ?, ?, ?, ?)",
     (student_id, partner_id, current_location, to_location, datetime.datetime.now().strftime("%d/%m/%Y-%H:%M:%S"), "Active")
     )   
     conn.commit()
     conn.close()
-    print("saved to db")
+    
     return jsonify({"status": "ok"})
 
 if __name__ == '__main__':
